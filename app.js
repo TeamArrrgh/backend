@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var googleSearchApi = require('./apis/googlesearch');
 
 var app = express();
 
@@ -48,7 +49,8 @@ app.get('/', function (req, res) {
 })
 
 app.listen(3000, function () {
-  console.log('Example app listening on port 3000!')
+  console.log(googleSearchApi);
+  console.log(googleSearchApi.get('www.visitspokane.com'));
 })
 
 module.exports = app;
