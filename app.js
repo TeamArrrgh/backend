@@ -86,7 +86,10 @@ app.get('/', function (req, res) {
 
 
 app.listen(3000, function () {
-  console.log('------------');
+
+  var blah  = googleSearchApi.get('www.visitspokane.com');
+  console.log(blah)
+
 })
 
 module.exports = app;
