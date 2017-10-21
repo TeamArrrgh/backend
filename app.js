@@ -5,12 +5,30 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var redis = require('redis')
 var index = require('./routes/index');
 var users = require('./routes/users');
 var googleSearchApi = require('./apis/googlesearch');
 
 var app = express();
+
+//Redis shit.
+var client = redis.createClient('6379', 'simplex.ev.io');
+client.on("error", function (err) {
+});
+
+client.set("string key", "string val", redis.print);
+client.hset("hash key", "hashtest 1", "some value", redis.print);
+client.hset(["hash key", "hashtest 2", "some other value"], redis.print);
+client.hkeys("hash key", function (err, replies) {
+    console.log(replies.length + " replies:");
+    replies.forEach(function (reply, i) {
+        console.log("    " + i + ": " + reply);
+    });
+    client.quit();
+});
+
+client.get("hey", redis.print);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
