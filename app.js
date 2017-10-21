@@ -64,7 +64,6 @@ app.get('/', function (req, res) {
 })
 
 app.listen(3000, function () {
-  console.log(googleSearchApi);
   console.log(googleSearchApi.get('www.visitspokane.com'));
 })
 
