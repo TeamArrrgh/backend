@@ -9,26 +9,46 @@ var redis = require('redis')
 var index = require('./routes/index');
 var users = require('./routes/users');
 var googleSearchApi = require('./apis/googlesearch');
+var rawData = require('./apis/googlesearch/raw_webmaster_data.json');
+const googleTrends = require('google-trends-api');
 
 var app = express();
 
 //Redis shit.
 var client = redis.createClient('6379', 'simplex.ev.io');
-client.on("error", function (err) {
-});
 
-client.set("string key", "string val", redis.print);
-client.hset("hash key", "hashtest 1", "some value", redis.print);
-client.hset(["hash key", "hashtest 2", "some other value"], redis.print);
-client.hkeys("hash key", function (err, replies) {
-    console.log(replies.length + " replies:");
-    replies.forEach(function (reply, i) {
-        console.log("    " + i + ": " + reply);
-    });
-    client.quit();
-});
+var dataString = JSON.stringify(rawData);
 
-client.get("hey", redis.print);
+// client.set('wm_data_test', dataString, function(err, res) {
+//   console.log(res);
+//   return res;
+// })
+
+// client.get('wm_data_test', function(err, res) {
+//   console.log(JSON.parse(res));
+//   return res;
+// })
+
+// var reportStruct = {};
+// rawData['rows'].forEach(function(row){
+//   console.log(row);
+// });
+
+googleTrends.interestOverTime({keyword: 'laser quest', startTime: new Date('2017-08-01'), endTime: new Date('2017-10-31'), geo: 'US-WA-881'}).then((res) => {
+  console.log(res);
+}).catch((err) => {
+  console.log(err);
+})
+
+console.log('--------------------------------');
+
+googleTrends.relatedQueries({keyword: 'laser quest', startTime: new Date('2017-08-01'), endTime: new Date('2017-10-31'), geo: 'US-WA-881'})
+.then((res) => {
+  console.log(res);
+})
+.catch((err) => {
+  console.log(err);
+})
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -63,8 +83,10 @@ app.get('/', function (req, res) {
   res.send('Hello World!')
 })
 
+
+
 app.listen(3000, function () {
-  console.log(googleSearchApi.get('www.visitspokane.com'));
+  console.log('------------');
 })
 
 module.exports = app;
