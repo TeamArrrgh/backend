@@ -6,13 +6,38 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var redis = require('redis')
+
 var index = require('./routes/index');
-var users = require('./routes/users');
+
+var fs = require('fs');
+var http = require('http');
+var https = require('https');
+
 var googleSearchApi = require('./apis/googlesearch');
 var rawData = require('./apis/googlesearch/raw_webmaster_data.json');
 const googleTrends = require('google-trends-api');
 
+
+if(false) {
+  var privateKey  = fs.readFileSync('/etc/letsencrypt/live/simplex.ev.io/privkey.pem', 'utf8');
+  var certificate = fs.readFileSync('/etc/letsencrypt/live/simplex.ev.io/fullchain.pem', 'utf8');
+  
+  var credentials = {key: privateKey, cert: certificate};
+  
+  // your express configuration here
+} else {
+  var credentials = {key: "", cert: ""}
+}
+
+
+
 var app = express();
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+
+
+
+
 
 //Redis shit.
 var client = redis.createClient('6379', 'simplex.ev.io');
@@ -34,21 +59,6 @@ var dataString = JSON.stringify(rawData);
 //   console.log(row);
 // });
 
-googleTrends.interestOverTime({keyword: 'laser quest', startTime: new Date('2017-08-01'), endTime: new Date('2017-10-31'), geo: 'US-WA-881'}).then((res) => {
-  console.log(res);
-}).catch((err) => {
-  console.log(err);
-})
-
-console.log('--------------------------------');
-
-googleTrends.relatedQueries({keyword: 'laser quest', startTime: new Date('2017-08-01'), endTime: new Date('2017-10-31'), geo: 'US-WA-881'})
-.then((res) => {
-  console.log(res);
-})
-.catch((err) => {
-  console.log(err);
-})
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -58,15 +68,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
-app.use('/users', users);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
+app.set('view engine', 'jade');
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -79,14 +81,10 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.get('/', function (req, res) {
-  res.send('Hello World!')
-})
 
+app.use('/*', index);
 
-
-app.listen(3000, function () {
-  console.log('------------');
-})
+httpServer.listen(8080);
+httpsServer.listen(8443);
 
 module.exports = app;

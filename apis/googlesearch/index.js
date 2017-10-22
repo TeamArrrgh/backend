@@ -75,24 +75,24 @@ var gettrendsovertime = function(keyword, startTime, endTime, geo) {
 	return rtnData;
 }
 
-// Returns Google Trends Data over time
-// var getrelatedqueries = function(keyword, startdate, enddate, geo) {
-// 	var rtnData = {}
-// 	var params = {
-// 		keyword : term,
-// 		startTime : (startdate instanceof Date) ? startdate : new Date(startdate.toString()),
-// 		endTime : (startdate instanceof Date) ? enddate : new Date(enddate.toString()),
-// 		geo : (geo !== undefined) ? geo.toString() : 'US-WA-881'
-// 	}
+	// Returns Google Trends Data over time
+	// var getrelatedqueries = function(keyword, startdate, enddate, geo) {
+	// 	var rtnData = {}
+	// 	var params = {
+	// 		keyword : term,
+	// 		startTime : (startdate instanceof Date) ? startdate : new Date(startdate.toString()),
+	// 		endTime : (startdate instanceof Date) ? enddate : new Date(enddate.toString()),
+	// 		geo : (geo !== undefined) ? geo.toString() : 'US-WA-881'
+	// 	}
 
-// 	googleTrends.relatedQueries(params).then((res) => {
-// 	  rtnData = res;
-// 	}).catch((err) => {
-// 	  console.log(err);
-// 	})
-	
-// 	return rtnData;
-// }
+	// 	googleTrends.relatedQueries(params).then((res) => {
+	// 	  rtnData = res;
+	// 	}).catch((err) => {
+	// 	  console.log(err);
+	// 	})
+		
+	// 	return rtnData;
+	// }
 
 	// private utility functions
 	var arraySortBy = function(arr, prop, type, dir) {
